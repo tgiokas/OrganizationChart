@@ -1,0 +1,16 @@
+{
+  "IMPORT": [
+    { "code": "IMP-000", "message": "An unexpected error occurred." },
+    { "code": "IMP-001", "message": "Import job not found." },
+    { "code": "IMP-002", "message": "Batch import request must contain at least one user." },
+    { "code": "IMP-003", "message": "Delta import request must contain at least one change." },
+    { "code": "IMP-004", "message": "ExternalId is required for each user." },
+    { "code": "IMP-005", "message": "Duplicate ExternalId found in request." },
+    { "code": "IMP-006", "message": "Failed to create user in DMS.Authentication." },
+    { "code": "IMP-007", "message": "Failed to update user in DMS.Authentication." },
+    { "code": "IMP-008", "message": "Failed to disable user in DMS.Authentication." },
+    { "code": "IMP-009", "message": "Missing required fields: ExternalId and Username are required." },
+    { "code": "IMP-010", "message": "PartnerCode is required." },
+    { "code": "IMP-011", "message": "Import job is already being processed." }
+  ]
+}
