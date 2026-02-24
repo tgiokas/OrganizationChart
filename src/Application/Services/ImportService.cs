@@ -4,25 +4,24 @@ using ExternalIntegrations.OrganizationChart.Domain.Interfaces;
 
 namespace ExternalIntegrations.OrganizationChart.Application.Services;
 
+/// Handles import submission and job querying.
+/// Called by the ImportController.
 public class ImportService : IImportService
 {
     private readonly IImportJobRepository _jobRepository;
     private readonly IImportJobItemRepository _jobItemRepository;
     private readonly IImportedUserRepository _importedUserRepository;
-    private readonly IAuthApiClient _authApiClient;
     private readonly IImportMessagePublisher _messagePublisher;
 
     public ImportService(
         IImportJobRepository jobRepository,
         IImportJobItemRepository jobItemRepository,
-        IImportedUserRepository importedUserRepository,
-        IAuthApiClient authApiClient,
+        IImportedUserRepository importedUserRepository,     
         IImportMessagePublisher messagePublisher)
     {
         _jobRepository = jobRepository;
         _jobItemRepository = jobItemRepository;
-        _importedUserRepository = importedUserRepository;
-        _authApiClient = authApiClient;
+        _importedUserRepository = importedUserRepository;      
         _messagePublisher = messagePublisher;
     }
 
@@ -45,23 +44,6 @@ public class ImportService : IImportService
         //  Save to DB
         //  Publish Kafka message with jobId
         //  Return jobId
-        throw new NotImplementedException();
-    }
-
-    public Task ProcessJobAsync(Guid jobId)
-    {
-        //  Load ImportJob by jobId
-        //  Set Status = Processing
-        //  Load all ImportJobItems with Status = Pending
-        //  FOR EACH item (sequential):
-        //       - Lookup ImportedUsers mapping by ExternalId
-        //       - If NOT found --> call _authApiClient.CreateUserAsync --> save mapping
-        //       - If FOUND + changed --> call _authApiClient.UpdateUserAsync
-        //       - If FOUND + unchanged --> mark as Skipped
-        //       - If Action = Disable --> call _authApiClient.DisableUserAsync
-        //       - Update item status (Success/Failed/Skipped)
-        //  Update ImportJob totals and final status
-        //  Set CompletedAt
         throw new NotImplementedException();
     }
 

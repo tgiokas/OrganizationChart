@@ -1,7 +1,8 @@
+using Microsoft.Extensions.Logging;
+
 using ExternalIntegrations.OrganizationChart.Application.Dtos;
 using ExternalIntegrations.OrganizationChart.Application.Interfaces;
 using ExternalIntegrations.OrganizationChart.Infrastructure.ApiClients;
-using Microsoft.Extensions.Logging;
 
 namespace ExternalIntegrations.OrganizationChart.Infrastructure.ExternalServices;
 

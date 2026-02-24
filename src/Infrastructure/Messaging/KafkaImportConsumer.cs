@@ -6,13 +6,13 @@ using Microsoft.Extensions.Logging;
 
 using Confluent.Kafka;
 
-using ExternalIntegrations.OrganizationChart.Application.Dtos;
+using ExternalIntegrations.OrganizationChart.Application;
 using ExternalIntegrations.OrganizationChart.Application.Interfaces;
 
-namespace ExternalIntegrations.OrganizationChart.Infrastructure.Messaging;
+namespace ExternalIntegrations.OrganizationChart.Infrastructure;
 
 /// Background service that consumes from the "import-jobs" Kafka topic.
-/// 
+
 /// On receiving a message:
 /// 1. Deserializes the KafkaMessage envelope
 /// 2. Extracts JobId from the Content
@@ -38,44 +38,7 @@ public class KafkaImportConsumer : BackgroundService
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
-    {      
-        // 1. Build ConsumerConfig:
-        //    var consumerConfig = new ConsumerConfig
-        //    {
-        //        BootstrapServers = _configuration["KAFKA_BOOTSTRAP_SERVERS"],
-        //        GroupId = _configuration["KAFKA_CONSUMER_GROUP"],
-        //        AutoOffsetReset = AutoOffsetReset.Earliest,
-        //        EnableAutoCommit = false  // manual commit after processing
-        //    };
-        //
-        // 2. Build consumer and subscribe:
-        //    using var consumer = new ConsumerBuilder<string, string>(consumerConfig).Build();
-        //    consumer.Subscribe(_configuration["KAFKA_IMPORT_TOPIC"]);
-        //
-        // 3. Consume loop:
-        //    while (!stoppingToken.IsCancellationRequested)
-        //    {
-        //        var consumeResult = consumer.Consume(stoppingToken);
-        //
-        //        // 4. Deserialize the KafkaMessage<ImportJobCreatedEvent> envelope:
-        //        var envelope = JsonSerializer.Deserialize<KafkaMessage<ImportJobCreatedEvent>>(consumeResult.Message.Value);
-        //        var jobId = envelope?.Content?.JobId;
-        //
-        //        // 5. Create DI scope (because this is a singleton hosted service):
-        //        using var scope = _scopeFactory.CreateScope();
-        //        var importService = scope.ServiceProvider.GetRequiredService<IImportService>();
-        //
-        //        // 6. Process the job:
-        //        await importService.ProcessJobAsync(jobId.Value);
-        //
-        //        // 7. Commit offset ONLY after successful processing:
-        //        consumer.Commit(consumeResult);
-        //
-        //        // If ProcessJobAsync throws, offset is NOT committed.
-        //        // On restart, the consumer will re-read this message.
-        //        // ProcessJobAsync skips items already marked Success (idempotent).
-        //    }
-
+    {       
         throw new NotImplementedException();
     }
 }

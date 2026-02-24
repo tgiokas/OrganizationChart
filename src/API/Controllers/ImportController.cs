@@ -7,7 +7,7 @@ using ExternalIntegrations.OrganizationChart.Application.Interfaces;
 namespace ExternalIntegrations.OrganizationChart.Api.Controllers;
 
 [ApiController]
-[Route("api/import")]
+[Route("[controller]")]
 [Authorize] // Partner must have a valid JWT from Keycloak (client_credentials)
 public class ImportController : ControllerBase
 {
@@ -20,8 +20,6 @@ public class ImportController : ControllerBase
 
     /// Full batch import (initial push or reconciliation).
     [HttpPost("users/batch")]
-    [ProducesResponseType(typeof(object), StatusCodes.Status202Accepted)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> BatchImport(BatchImportRequest request)
     {
         //  Call _importService.SubmitBatchImportAsync(request)
@@ -30,8 +28,6 @@ public class ImportController : ControllerBase
 
     /// Delta/incremental import (ongoing changes).
     [HttpPost("users/delta")]
-    [ProducesResponseType(typeof(object), StatusCodes.Status202Accepted)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeltaImport(DeltaImportRequest request)
     {
         //  Call _importService.SubmitDeltaImportAsync(request)
@@ -40,8 +36,6 @@ public class ImportController : ControllerBase
 
     /// Get the status of an import job.
     [HttpGet("jobs/{jobId:guid}")]
-    [ProducesResponseType(typeof(ImportJobResultDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetJobStatus([FromRoute] Guid jobId)
     {
         //  Call _importService.GetJobStatusAsync(jobId)
@@ -50,8 +44,6 @@ public class ImportController : ControllerBase
 
     /// Get the full report of an import job including per-user results.
     [HttpGet("jobs/{jobId:guid}/report")]
-    [ProducesResponseType(typeof(ImportJobReportDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetJobReport([FromRoute] Guid jobId)
     {
         //  Call _importService.GetJobReportAsync(jobId)
