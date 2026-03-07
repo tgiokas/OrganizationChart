@@ -20,7 +20,7 @@ public class ImportController : ControllerBase
 
     /// Full batch import (initial push or reconciliation).
     [HttpPost("users/batch")]
-    public async Task<IActionResult> BatchImport(BatchImportRequest request)
+    public async Task<IActionResult> BatchImport(ImportBatchRequest request)
     {
         //  Call _importService.SubmitBatchImportAsync(request)
         throw new NotImplementedException();
@@ -28,7 +28,7 @@ public class ImportController : ControllerBase
 
     /// Delta/incremental import (ongoing changes).
     [HttpPost("users/delta")]
-    public async Task<IActionResult> DeltaImport(DeltaImportRequest request)
+    public async Task<IActionResult> DeltaImport(ImportDeltaRequest request)
     {
         //  Call _importService.SubmitDeltaImportAsync(request)
         throw new NotImplementedException();

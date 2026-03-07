@@ -1,6 +1,6 @@
 namespace ExternalIntegrations.OrganizationChart.Application.Dtos;
 
-public class DeltaImportRequest
+public class ImportDeltaRequest
 {
     public required string PartnerCode { get; set; }
     public required List<DeltaUserDto> Changes { get; set; }

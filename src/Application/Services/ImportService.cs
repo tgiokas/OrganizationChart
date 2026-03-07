@@ -25,7 +25,7 @@ public class ImportService : IImportService
         _messagePublisher = messagePublisher;
     }
 
-    public Task<Result<Guid>> SubmitBatchImportAsync(BatchImportRequest request)
+    public Task<Result<Guid>> SubmitBatchImportAsync(ImportBatchRequest request)
     {
         //  Validate request
         //  Create ImportJob entity (Status = Pending, Type = Batch)
@@ -36,7 +36,7 @@ public class ImportService : IImportService
         throw new NotImplementedException();
     }
 
-    public Task<Result<Guid>> SubmitDeltaImportAsync(DeltaImportRequest request)
+    public Task<Result<Guid>> SubmitDeltaImportAsync(ImportDeltaRequest request)
     {
         //  Validate request
         //  Create ImportJob entity (Status = Pending, Type = Delta)

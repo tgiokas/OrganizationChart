@@ -8,11 +8,11 @@ public interface IImportService
 {
     /// Accepts a batch import request, creates the job and items in DB,
     /// publishes a Kafka message, and returns the jobId.
-    Task<Result<Guid>> SubmitBatchImportAsync(BatchImportRequest request);
+    Task<Result<Guid>> SubmitBatchImportAsync(ImportBatchRequest request);
 
     /// Accepts a delta import request, creates the job and items in DB,
     /// publishes a Kafka message, and returns the jobId.
-    Task<Result<Guid>> SubmitDeltaImportAsync(DeltaImportRequest request);
+    Task<Result<Guid>> SubmitDeltaImportAsync(ImportDeltaRequest request);
 
     /// Returns the current status of an import job.
     Task<Result<ImportJobResultDto>> GetJobStatusAsync(Guid jobId);

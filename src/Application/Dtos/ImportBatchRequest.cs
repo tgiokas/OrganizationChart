@@ -1,6 +1,6 @@
 namespace ExternalIntegrations.OrganizationChart.Application.Dtos;
 
-public class BatchImportRequest
+public class ImportBatchRequest
 {
     public required string PartnerCode { get; set; }
     public required List<ExternalUserDto> Users { get; set; }
