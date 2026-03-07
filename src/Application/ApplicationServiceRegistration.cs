@@ -1,11 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
 
-using OrganizationChart.Application.Interfaces;
-using OrganizationChart.Application.Services;
+using ExternalIntegrations.OrganizationChart.Application.Interfaces;
+using ExternalIntegrations.OrganizationChart.Application.Services;
 
 namespace ExternalIntegrations.OrganizationChart.Application;
 
-public static class DependencyInjection
+public static class ApplicationServiceRegistration
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {

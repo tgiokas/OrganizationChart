@@ -11,7 +11,7 @@ using ExternalIntegrations.OrganizationChart.Infrastructure.Repositories;
 
 namespace ExternalIntegrations.OrganizationChart.Infrastructure;
 
-public static class DependencyInjection
+public static class InfrastructureServiceRegistration
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {

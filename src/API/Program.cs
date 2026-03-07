@@ -5,8 +5,6 @@ using Serilog;
 
 using ExternalIntegrations.OrganizationChart.Application;
 using ExternalIntegrations.OrganizationChart.Infrastructure;
-using ExternalIntegrations.OrganizationChart.Application.Interfaces;
-using ExternalIntegrations.OrganizationChart.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,8 +20,8 @@ Log.Logger = new LoggerConfiguration()
 Log.Information("OrganizationChart is starting...");
 builder.Host.UseSerilog();
 
-// Application services
-builder.Services.AddScoped<IImportService, ImportService>();
+// Add Application services
+builder.Services.AddApplicationServices();
 
 // Infrastructure services (DB, Repositories, Kafka, HttpClient)
 builder.Services.AddInfrastructureServices(builder.Configuration);
