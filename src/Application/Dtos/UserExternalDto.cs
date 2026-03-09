@@ -1,6 +1,6 @@
 namespace ExternalIntegrations.OrganizationChart.Application.Dtos;
 
-public class ExternalUserDto
+public class UserExternalDto
 {
     public required string ExternalId { get; set; }
     public required string Username { get; set; }
