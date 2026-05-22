@@ -1,0 +1,31 @@
+{
+  "IMPORT": [
+    { "code": "IMP-000", "message": "An unexpected error occurred." },
+    { "code": "IMP-001", "message": "Import job not found." },
+    { "code": "IMP-002", "message": "Batch import request must contain at least one user." },
+    { "code": "IMP-003", "message": "Delta import request must contain at least one change." },
+    { "code": "IMP-004", "message": "ExternalId is required for each user." },
+    { "code": "IMP-005", "message": "Duplicate ExternalId found in request." },
+    { "code": "IMP-006", "message": "Failed to create user in DMS.Authentication." },
+    { "code": "IMP-007", "message": "Failed to update user in DMS.Authentication." },
+    { "code": "IMP-008", "message": "Failed to disable user in DMS.Authentication." },
+    { "code": "IMP-009", "message": "Missing required fields: ExternalId and Username are required." },
+    { "code": "IMP-010", "message": "PartnerCode is required." },
+    { "code": "IMP-011", "message": "Import job is already being processed." },
+    { "code": "IMP-012", "message": "Import request not found." },
+    { "code": "IMP-013", "message": "SyncId is required." },
+    { "code": "IMP-014", "message": "At least one item review decision is required." },
+    { "code": "IMP-015", "message": "User import already exists." },
+    { "code": "IMP-016", "message": "Item was not found." },
+    { "code": "IMP-017", "message": "Item is not approved." },
+    { "code": "IMP-018", "message": "Item status is not Pending-Dispatch." },
+    { "code": "IMP-019", "message": "Item does not belong to sync." },
+    { "code": "IMP-020", "message": "Item is not reviewable. Current status Pending-Review." },
+    { "code": "IMP-021", "message": "Duplicate item decisions detected." },
+    { "code": "IMP-022", "message": "Error in errors.json file." },
+    { "code": "IMP-023", "message": "Referenced OrgUnits cannot be found." },
+    { "code": "IMP-024", "message": "Validation failed." },
+    { "code": "IMP-025", "message": "All items failed validation; nothing was persisted." },
+    { "code": "IMP-026", "message": "OrgUnit import already exists." }
+  ]
+}

@@ -1,4 +1,4 @@
-namespace ExternalIntegrations.OrganizationChart.Application.Errors;
+namespace IntegrationImport.Application.Errors;
 
 public static class ErrorCodes
 {
@@ -16,5 +16,20 @@ public static class ErrorCodes
         public const string MissingRequiredFields = "IMP-009";
         public const string PartnerCodeRequired = "IMP-010";
         public const string JobAlreadyProcessing = "IMP-011";
+        public const string ImportRequestNotFound = "IMP-012";
+        public const string SyncIdRequired = "IMP-013";
+        public const string AtLeastOneItemReviewDecisionRequired = "IMP-014";
+        public const string UserImportExists = "IMP-015";
+        public const string ItemNotFound = "IMP-016";
+        public const string ItemNotApproved = "IMP-017";
+        public const string ItemStatusNotPendingDispatch = "IMP-018";
+        public const string ItemDoesNotBelongToSync = "IMP-019";
+        public const string ItemNotInPendingReviewStatus = "IMP-020";
+        public const string DuplicateItemDecisionsDetected = "IMP-021";
+        public const string AnImportErrorOccurredInJson = "IMP-022";
+        public const string OrgUnitHrmsIdNotFound = "IMP-023";
+        public const string ValidationFailed = "IMP-024";
+        public const string AllItemsRejected = "IMP-025";
+        public const string OrgUnitImportExists = "IMP-026";
     }
 }

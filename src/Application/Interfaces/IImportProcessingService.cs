@@ -1,11 +1,9 @@
-namespace ExternalIntegrations.OrganizationChart.Application.Interfaces;
+﻿using IntegrationImport.Application.Dtos;
 
-/// Handles the actual processing of import jobs.
-/// Called by the KafkaImportConsumer (consumer-facing).
+namespace IntegrationImport.Application.Interfaces;
+
 public interface IImportProcessingService
 {
-    /// Processes all pending items for the given job sequentially.
-    /// For each item: lookup mapping --> call DMS.Auth --> update status.
-    /// Skips items already marked as Success (idempotent on retry).
-    Task ProcessJobAsync(Guid jobId);
+    Task ProcessApprovedItemAsync(ImportΙtemApprovedMessageDto message, CancellationToken ct);
 }
+

@@ -1,10 +1,10 @@
-namespace ExternalIntegrations.OrganizationChart.Domain.Enums;
+namespace IntegrationImport.Domain.Enums;
 
 public enum ImportJobStatus
 {
-    Pending = 0,
-    Processing = 1,
-    Completed = 2,
-    CompletedWithErrors = 3,
-    Failed = 4
+    PENDING_REVIEW = 1,
+    UNDER_REVIEW = 2,
+    REVIEW_COMPLETED = 3,
+    PARTIALLY_APPLIED = 4,
+    APPLIED = 5
 }

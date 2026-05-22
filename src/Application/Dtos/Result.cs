@@ -1,4 +1,4 @@
-namespace ExternalIntegrations.OrganizationChart.Application.Dtos;
+namespace IntegrationImport.Application.Dtos;
 
 public class Result<T>
 {

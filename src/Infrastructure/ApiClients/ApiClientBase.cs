@@ -1,15 +1,18 @@
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Net;
-using Microsoft.Extensions.Logging;
-using Polly;
-using Polly.Retry;
 
-namespace ExternalIntegrations.OrganizationChart.Infrastructure.ApiClients;
+using Polly;
+
+using IntegrationImport.Application.Interfaces;
+
+namespace IntegrationImport.Infrastructure.ApiClients;
 
 public abstract class ApiClientBase
 {
     protected readonly HttpClient _httpClient;
     protected readonly ILogger _logger;
+    protected readonly IErrorCatalog _errorCatalog;
 
     const string LogMessageTemplate =
         "HTTP {Direction} {RequestMethod} {RequestPath} {RequestPayload} responded {HttpStatusCode} {ResponsePayload} in {Elapsed:0.0000} ms";
@@ -17,10 +20,11 @@ public abstract class ApiClientBase
     const string ErrorMessageTemplate =
         "ERROR {Direction} {RequestMethod} {RequestPath} {RequestPayload} responded {HttpStatusCode} {ResponsePayload}";
 
-    protected ApiClientBase(HttpClient httpClient, ILogger logger)
+    protected ApiClientBase(HttpClient httpClient, ILogger logger, IErrorCatalog errorCatalog)
     {
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _errorCatalog = errorCatalog ?? throw new ArgumentNullException(nameof(errorCatalog));  
     }
 
     protected async Task<HttpResponseMessage> SendRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)

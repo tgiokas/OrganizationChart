@@ -1,40 +1,56 @@
-using ExternalIntegrations.OrganizationChart.Domain.Entities;
-using ExternalIntegrations.OrganizationChart.Domain.Interfaces;
-using ExternalIntegrations.OrganizationChart.Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
 
-namespace ExternalIntegrations.OrganizationChart.Infrastructure.Repositories;
+using IntegrationImport.Domain.Interfaces;
+using IntegrationImport.Infrastructure.Database;
+using IntegrationImport.Domain.Entities;
 
-public class ImportedUserRepository : IImportedUserRepository
+namespace IntegrationImport.Infrastructure.Repositories;
+
+public class ImportedUserRepository :  IImportedUserRepository
 {
     private readonly ApplicationDbContext _dbContext;
-
     public ImportedUserRepository(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public Task<ImportedUser?> GetByExternalIdAsync(string externalId)
+
+
+    public Task<ImportedUser?> GetBySourceImportItemIdAsync(Guid sourceImportItemId, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        return _dbContext.ImportedUsers
+            .FirstOrDefaultAsync(x => x.SourceImportItemId == sourceImportItemId, ct);
     }
 
-    public Task<List<ImportedUser>> GetByPartnerCodeAsync(string partnerCode)
+    public async Task<ImportedUser?> GetByExternalIdAsync(string externalId, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        return await _dbContext.ImportedUsers
+            .FirstOrDefaultAsync(x => x.ExternalId == externalId, ct);
     }
 
-    public Task<List<ImportedUser>> GetAllAsync()
+    public async Task<ImportedUser?> GetByKeycloakUserIdAsync(string keycloakUserId, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        return await _dbContext.ImportedUsers
+            .FirstOrDefaultAsync(x => x.KeycloakUserId.ToString() == keycloakUserId, ct);
     }
 
-    public Task AddAsync(ImportedUser importedUser)
+    public async Task AddAsync(ImportedUser importedUser, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        await _dbContext.ImportedUsers.AddAsync(importedUser, ct);
     }
 
-    public Task UpdateAsync(ImportedUser importedUser)
+    public Task<ImportedUser?> GetByExternalIdWithOrgUnitsAsync(string externalId, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        return _dbContext.ImportedUsers
+            .Include(x => x.OrganizationUnits)
+                .ThenInclude(x => x.ImportedOrganizationUnit)
+            .FirstOrDefaultAsync(x => x.ExternalId == externalId, ct);
     }
+
+
+
+    //public async Task UpdateAsync(ImportedUser importedUser, CancellationToken ct)
+    //{
+    //   await _dbContext.ImportedUsers.Update(importedUser);
+    //}
 }

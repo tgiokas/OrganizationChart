@@ -1,4 +1,4 @@
-namespace ExternalIntegrations.OrganizationChart.Domain.Enums;
+namespace IntegrationImport.Domain.Enums;
 
 public enum ImportJobType
 {
