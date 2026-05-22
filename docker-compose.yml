@@ -1,0 +1,290 @@
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.3.4
+    container_name: keycloak
+    env_file:
+      - .env
+    command:
+      - start-dev
+      # - start
+      - --import-realm
+      # - --hostname=localhost 
+      # - --hostname-strict=false 
+      # - --https-certificate-file=/opt/keycloak/certs/keycloak.crt 
+      # - --https-certificate-key-file=/opt/keycloak/certs/keycloak.key 
+      # - --https-port=8443 
+      # - --http-enabled=false 
+    depends_on:
+      - keycloak-db
+    #dev only
+    ports:
+      - "8085:8080"
+      # - "8085:8443"
+    networks:
+      - archium-network
+    # labels:
+    #   - "traefik.enable=true"
+    volumes:
+      - ./exports/realm-export.json:/opt/keycloak/data/import/realm-export.json
+      # - ./certs:/opt/keycloak/certs
+
+  keycloak-db:
+    image: postgres:15.2
+    container_name: keycloak-db
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${KC_DB_USERNAME}
+      POSTGRES_PASSWORD: ${KC_DB_PASSWORD}
+      POSTGRES_DB: ${KC_DB_POSTGRES_DB}
+    #dev only
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./volumes/keycloak_db_data:/var/lib/postgresql/data
+    networks:
+      - archium-network
+
+  auth-db:
+    image: postgres:15.2
+    container_name: auth-db
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${AUTH_DB_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${AUTH_DB_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${AUTH_DB_POSTGRES_DB}
+    #dev only
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./volumes/auth_db_data:/var/lib/postgresql/data
+    networks:
+      - archium-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${AUTH_DB_POSTGRES_USER:-postgres} -d ${AUTH_DB_POSTGRES_DB:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    
+  # auth-api:
+  #     container_name: auth-api
+  #     build:
+  #       context: .
+  #     env_file:
+  #       - .env
+  #     ports:
+  #     - "5032:5032"
+  #     environment:
+  #       AUTH_DB_CONNECTION: Host=auth-db;Database=${AUTH_DB_POSTGRES_DB};Username=${AUTH_DB_POSTGRES_USER};Password=${AUTH_DB_POSTGRES_PASSWORD};Include Error Detail=true
+  #     depends_on:
+  #       auth-db:
+  #         condition: service_healthy
+  #       keycloak:
+  #         condition: service_started
+  #     networks:
+  #       - archium-network
+  #     #dev only
+  #     #    ports:
+  #     #      - "1010:80"
+  #     healthcheck:
+  #       test: ["CMD", "curl", "-fsS", "http://localhost:80/health"]
+  #       interval: 10s
+  #       timeout: 5s
+  #       retries: 10
+  #       start_period: 60s
+  #     labels:
+  #       - "traefik.enable=true"
+  #     entrypoint: ["/bin/sh", "/tmp/auth-api-entrypoint.sh"]
+  #     command: ["dotnet", "Authentication.Api.dll"]
+  #     volumes:
+  #       - ../error-codes/errors.json:/app/errors.json:ro
+  #       - ../certs/keycloak.crt:/usr/local/share/ca-certificates/keycloak.crt:ro
+  #       - ./scripts/auth-api-entrypoint.sh:/tmp/auth-api-entrypoint.sh:ro
+
+  
+  kafka1:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka1
+    ports:
+      - "9092:9092"
+      - "19092:19092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: "broker,controller"
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka1:29093,2@kafka2:29093"
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:9092,DOCKER://0.0.0.0:19092,CONTROLLER://0.0.0.0:29093"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://localhost:9092,DOCKER://kafka1:19092"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT,DOCKER:PLAINTEXT,CONTROLLER:PLAINTEXT"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "DOCKER"
+      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_LOG_DIRS: "/tmp/kraft-combined-logs"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+      KAFKA_MIN_INSYNC_REPLICAS: 1
+      CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
+    networks:
+      - archium-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "kafka-topics",
+          "--bootstrap-server",
+          "localhost:9092",
+          "--list",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - kafka1-data:/var/lib/kafka/data
+
+  kafka2:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka2
+    ports:
+      - "9093:9092"
+      - "19093:19093"
+    environment:
+      KAFKA_NODE_ID: 2
+      KAFKA_PROCESS_ROLES: "broker,controller"
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka1:29093,2@kafka2:29093"
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:9092,DOCKER://0.0.0.0:19092,CONTROLLER://0.0.0.0:29093"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://localhost:9093,DOCKER://kafka2:19092"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT,DOCKER:PLAINTEXT,CONTROLLER:PLAINTEXT"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "DOCKER"
+      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_LOG_DIRS: "/tmp/kraft-combined-logs"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+      KAFKA_MIN_INSYNC_REPLICAS: 1
+      CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
+    networks:
+      - archium-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "kafka-topics",
+          "--bootstrap-server",
+          "localhost:9092",
+          "--list",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - kafka2-data:/var/lib/kafka/data
+      
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8081:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka1:19092,kafka2:19092
+      - SERVER_PORT=8080
+    depends_on:
+      - kafka1
+      - kafka2
+    networks:
+      - archium-network
+    restart: always 
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false      
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g     
+    networks:
+      - archium-network
+    # volumes:
+    #   - esdata:/usr/share/elasticsearch/data
+    restart: always
+
+  kibana:
+  
+    image: docker.elastic.co/kibana/kibana:8.13.4
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - xpack.security.enabled=false
+    networks:
+      - archium-network   
+    depends_on:
+      - elasticsearch
+    restart: always
+
+  integrationimport-db:
+    image: postgres:15.2
+    container_name: integrationimport-db
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${integrationimport_DB_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${integrationimport_DB_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${integrationimport_DB_POSTGRES_DB}
+    ports:
+      - "5434:5432"
+    volumes:
+      - integrationimport-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${integrationimport_DB_POSTGRES_USER} -d ${integrationimport_DB_POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - archium-network
+    
+  integrationimport-api:
+    container_name: integrationimport-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      integrationimport-db:
+        condition: service_healthy
+      kafka1:
+        condition: service_started
+      keycloak:
+        condition: service_started
+       # auth-api:
+       #  condition: service_started
+    environment:
+        RunMigrationsOnStartup: "true"
+    ports:
+      - "8088:80"
+    networks:
+      - archium-network
+volumes:    
+    kafka1-data:
+    kafka2-data:
+    integrationimport-db-data:
+
+networks:
+  archium-network:
+    driver: bridge
+    name: archium-network
+
